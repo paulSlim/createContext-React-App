@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { PureComponent } from 'react';
+import { AppContext, defaultObject } from './AppContext';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.css';
+import LogPanel from './LogPanel';
+
+
+const loggedInMessage = <p>You signed in correctly!</p>;
+
+class App extends PureComponent {
+  state = {
+    isUserLoggedIn: defaultObject.isUserLoggedIn,
+  }
+
+  toggleLoggedIn = () => {
+    this.setState({
+      isUserLoggedIn: !this.isUserLoggedIn,
+    });
+  }
+
+  render() {
+    const LogPanelComponent = (
+      <AppContext.Provider value={{
+        isUserLoggedIn: this.state.isUserLoggedIn,
+        toggleLoggedIn: this.toggleLoggedIn,
+      }}>
+        <LogPanel />
+      </AppContext.Provider>
+    )
+    return (
+      <div>
+        { this.state.isUserLoggedIn ? loggedInMessage : LogPanelComponent}
+      </div>
+    );
+  }
 }
 
 export default App;
